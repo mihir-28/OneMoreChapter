@@ -23,7 +23,7 @@ end
 function OneMoreChapter:addToMainMenu(menu_items)
     menu_items.one_more_chapter = {
         text = _("One More Chapter"),
-        sorting_hint = "more_tools",
+        sorting_hint = "tools",
         enabled_func = function()
             return self:isSupportedDocument()
         end,

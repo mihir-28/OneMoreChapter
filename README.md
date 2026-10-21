@@ -19,13 +19,13 @@ The plugin works offline. It does not require Bookshelf, network access, or a se
 2. Connect your Kindle by USB. Back up `koreader/settings/` before changing files.
 3. Extract the ZIP. Copy the complete `onemorechapter.koplugin/` folder into `koreader/plugins/` on the Kindle. The final path should be `koreader/plugins/onemorechapter.koplugin/main.lua`.
 4. Safely eject the Kindle, then restart KOReader.
-5. Open an EPUB. Open the reader menu, go to **Tools → More tools → One More Chapter**, and follow the prompts.
+5. Open an EPUB. Open the reader menu, go to **Tools → One More Chapter**, and follow the prompts.
 
 Do not copy the ZIP itself into `koreader/plugins/`. The extracted plugin folder must sit directly inside that directory.
 
 ## First use
 
-The opening screen shows the current chapter, an estimate to its next table-of-contents boundary, and the following chapter when available. Select a preset budget of 10, 15, 20, or 30 minutes, or enter a custom budget from 1 to 480 minutes.
+The plugin is listed directly in the reader's **Tools** tab, without opening the nested **More tools** menu. The opening screen shows the current chapter, an estimate to its next table-of-contents boundary, and the following chapter when available. Select a preset budget of 10, 15, 20, or 30 minutes, or enter a custom budget from 1 to 480 minutes.
 
 If KOReader has pace data for the current book, the plugin uses it automatically. If it has no usable pace, the plugin asks for a manual average in seconds per rendered page. You can also choose **Set manual pace** from the budget screen. To return to automatic pace later, choose **Use KOReader automatic pace**.
 
