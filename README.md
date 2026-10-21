@@ -19,7 +19,7 @@ The plugin works offline. It does not require Bookshelf, network access, or a se
 2. Connect your Kindle by USB. Back up `koreader/settings/` before changing files.
 3. Extract the ZIP. Copy the complete `onemorechapter.koplugin/` folder into `koreader/plugins/` on the Kindle. The final path should be `koreader/plugins/onemorechapter.koplugin/main.lua`.
 4. Safely eject the Kindle, then restart KOReader.
-5. Open an EPUB. Open the reader menu, choose **One More Chapter**, and follow the prompts.
+5. Open an EPUB. Open the reader menu, go to **Tools → More tools → One More Chapter**, and follow the prompts.
 
 Do not copy the ZIP itself into `koreader/plugins/`. The extracted plugin folder must sit directly inside that directory.
 
