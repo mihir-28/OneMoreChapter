@@ -1,0 +1,10 @@
+# Local development material
+references/
+dist/
+__pycache__/
+development-plan.docx
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+FileManager_*.png

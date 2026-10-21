@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Build install archive
+        run: python scripts/package_release.py --output dist --tag "$GITHUB_REF_NAME"
+      - name: Prepare release notes
+        id: notes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          previous_tag="$(curl -fsS \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "User-Agent: OneMoreChapter-release" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" 2>/dev/null \
+            | python -c 'import json,sys; print(json.load(sys.stdin)["tag_name"])' 2>/dev/null || true)"
+          if [ -n "$previous_tag" ]; then
+            previous_version="${previous_tag#v}"
+            python scripts/release_notes.py --version "$version" --since "$previous_version" --output dist/release-notes.md
+          else
+            python scripts/release_notes.py --version "$version" --output dist/release-notes.md
+          fi
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: One More Chapter ${{ steps.notes.outputs.version }}
+          body_path: dist/release-notes.md
+          files: dist/onemorechapter-*.zip

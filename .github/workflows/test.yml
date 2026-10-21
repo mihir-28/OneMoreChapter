@@ -1,0 +1,16 @@
+name: Lua syntax
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "5.1"
+      - name: Check plugin Lua syntax
+        run: find onemorechapter.koplugin -name '*.lua' -print0 | xargs -0 -n1 luac -p
