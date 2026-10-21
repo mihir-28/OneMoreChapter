@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 — Reader Tools shortcut
+
+- Move **One More Chapter** directly into the reader's **Tools** tab.
+- Expand installation and Kindle testing instructions.
+
 ## 0.1.0 — EPUB time-budget MVP
 
 - Add external KOReader plugin metadata and reader-menu entry for EPUBs.
