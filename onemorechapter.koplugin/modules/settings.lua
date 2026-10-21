@@ -6,6 +6,7 @@ Settings.DEFAULTS = {
     pace_source = "auto",
     manual_seconds_per_page = nil,
     last_budget_minutes = 20,
+    show_header_estimate = true,
 }
 
 function Settings.load()

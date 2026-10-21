@@ -7,7 +7,7 @@ local UNCERTAINTY = {
 }
 
 function Estimator.estimate(page_count, pace)
-    if type(page_count) ~= "number" or page_count <= 0 or not pace then
+    if type(page_count) ~= "number" or page_count < 0 or not pace then
         return nil
     end
 

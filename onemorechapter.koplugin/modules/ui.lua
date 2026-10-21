@@ -17,9 +17,37 @@ local function showMessage(text)
 end
 
 local function rangeText(estimate)
+    if estimate.maximum_seconds < 60 then
+        return _("<1 min")
+    end
     local minimum = math.max(1, math.floor(estimate.minimum_seconds / 60))
     local maximum = math.max(minimum, math.ceil(estimate.maximum_seconds / 60))
     return minimum .. "-" .. maximum .. " " .. _("min")
+end
+
+local function headerRangeText(estimate)
+    if estimate.maximum_seconds < 60 then
+        return "<1m"
+    end
+    local minimum = math.max(1, math.floor(estimate.minimum_seconds / 60))
+    local maximum = math.max(minimum, math.ceil(estimate.maximum_seconds / 60))
+    if minimum == maximum then
+        return minimum .. "m"
+    end
+    return minimum .. "-" .. maximum .. "m"
+end
+
+local function chapterDurationText(start_boundary, end_boundary, pace)
+    if not pace then
+        return _("Set a reading pace to estimate")
+    end
+    if not end_boundary then
+        return _("Unavailable")
+    end
+    if end_boundary.page <= start_boundary.page then
+        return _("Too short to estimate within one rendered page")
+    end
+    return rangeText(Estimator.estimate(end_boundary.page - start_boundary.page, pace))
 end
 
 local function confidenceText(confidence)
@@ -43,17 +71,16 @@ local function describeContext(chapters, pace)
     lines[#lines + 1] = _("Current chapter") .. ": " .. (chapters.current_title or _("Unknown"))
 
     local current_boundary = chapters.boundaries[1]
-    local current_estimate = pace and Estimator.estimate(current_boundary.page - chapters.current_page, pace)
     lines[#lines + 1] = _("Time to chapter end") .. ": "
-        .. (current_estimate and rangeText(current_estimate) or _("Set a reading pace to estimate"))
+        .. chapterDurationText({ page = chapters.current_page }, current_boundary, pace)
 
-    local next_boundary = chapters.boundaries[2]
-    if next_boundary then
-        local chapter_pages = next_boundary.page - current_boundary.page
-        local next_estimate = pace and Estimator.estimate(chapter_pages, pace)
-        lines[#lines + 1] = _("Next chapter") .. ": " .. boundaryTitle(next_boundary)
+    if current_boundary.is_book_end then
+        lines[#lines + 1] = _("Next boundary") .. ": " .. boundaryTitle(current_boundary)
+    else
+        local next_end = chapters.boundaries[2]
+        lines[#lines + 1] = _("Next chapter") .. ": " .. boundaryTitle(current_boundary)
         lines[#lines + 1] = _("Next chapter time") .. ": "
-            .. (next_estimate and rangeText(next_estimate) or _("Unavailable"))
+            .. chapterDurationText(current_boundary, next_end, pace)
     end
 
     return table.concat(lines, "\n")
@@ -68,6 +95,22 @@ local function readState(plugin)
         chapters = chapters,
         pace = StatsAdapter.getPace(plugin.ui, plugin.settings),
     }
+end
+
+function UI.headerEstimateText(plugin)
+    if not plugin:isSupportedDocument() then
+        return nil
+    end
+    local state = readState(plugin)
+    if not state or not state.pace then
+        return nil
+    end
+    local boundary = state.chapters.boundaries[1]
+    if not boundary or boundary.page <= state.chapters.current_page then
+        return nil
+    end
+    local estimate = Estimator.estimate(boundary.page - state.chapters.current_page, state.pace)
+    return estimate and (_("Ch") .. ": " .. headerRangeText(estimate)) or nil
 end
 
 local function promptManualPace(plugin, on_saved)
@@ -98,6 +141,7 @@ local function promptManualPace(plugin, on_saved)
                         plugin.settings.manual_seconds_per_page = seconds_per_page
                         plugin.settings.pace_source = "manual"
                         Settings.save(plugin.settings)
+                        plugin:updateHeaderEstimate()
                         UIManager:close(dialog)
                         if on_saved then
                             on_saved()
@@ -307,6 +351,19 @@ function UI.showBudgetChooser(plugin)
     }
     buttons[#buttons + 1] = {
         {
+            text = plugin.settings.show_header_estimate and _("Hide chapter time in header")
+                or _("Show chapter time in header"),
+            callback = function()
+                plugin.settings.show_header_estimate = not plugin.settings.show_header_estimate
+                Settings.save(plugin.settings)
+                plugin:updateHeaderEstimate()
+                UIManager:close(plugin.budget_dialog)
+                UI.showBudgetChooser(plugin)
+            end,
+        },
+    }
+    buttons[#buttons + 1] = {
+        {
             text = _("Use KOReader automatic pace"),
             enabled_func = function()
                 return plugin.settings.pace_source == "manual"
@@ -314,6 +371,7 @@ function UI.showBudgetChooser(plugin)
             callback = function()
                 plugin.settings.pace_source = "auto"
                 Settings.save(plugin.settings)
+                plugin:updateHeaderEstimate()
                 UIManager:close(plugin.budget_dialog)
                 UI.showBudgetChooser(plugin)
             end,
