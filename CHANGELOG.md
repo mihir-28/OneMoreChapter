@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 — Chapter mapping and header estimate
+
+- Preserve chapter order when multiple TOC entries start on the same rendered page.
+- Show the correct next chapter title and duration together.
+- Add a compact chapter-time estimate to KOReader's top status line, with a settings toggle.
+- Put **One More Chapter** first in the default reader **Tools** menu page.
+
 ## 0.1.1 — Reader Tools shortcut
 
 - Move **One More Chapter** directly into the reader's **Tools** tab.
