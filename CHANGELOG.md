@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 — Current chapter title fix
+
+- Use the XPointer-selected TOC entry for the current chapter title, avoiding front-matter titles on shared rendered pages.
+
 ## 0.1.2 — Chapter mapping and header estimate
 
 - Preserve chapter order when multiple TOC entries start on the same rendered page.
