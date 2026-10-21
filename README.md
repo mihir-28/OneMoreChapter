@@ -25,7 +25,9 @@ Do not copy the ZIP itself into `koreader/plugins/`. The extracted plugin folder
 
 ## First use
 
-The plugin is listed directly in the reader's **Tools** tab, without opening the nested **More tools** menu. The opening screen shows the current chapter, an estimate to its next table-of-contents boundary, and the following chapter when available. Select a preset budget of 10, 15, 20, or 30 minutes, or enter a custom budget from 1 to 480 minutes.
+The plugin is listed first in the reader's **Tools** tab in KOReader's default menu order. The opening screen shows the current chapter, an estimate to its next table-of-contents boundary, and the following chapter when available. Select a preset budget of 10, 15, 20, or 30 minutes, or enter a custom budget from 1 to 480 minutes.
+
+When KOReader's top status line is enabled, the plugin shows a compact **Ch: 12-18m** estimate there. It refreshes as you turn pages; at a chapter's first page, the estimate is for the whole chapter. Toggle this from the budget screen with **Show/Hide chapter time in header**. The header stays empty if pace or a future chapter boundary is unavailable.
 
 If KOReader has pace data for the current book, the plugin uses it automatically. If it has no usable pace, the plugin asks for a manual average in seconds per rendered page. You can also choose **Set manual pace** from the budget screen. To return to automatic pace later, choose **Use KOReader automatic pace**.
 
@@ -40,6 +42,7 @@ Try these checks with a few EPUBs before relying on estimates. Keep your current
 ### Basic flow
 
 - Open an EPUB with a clear, multi-chapter table of contents. Open **One More Chapter** from the reader menu.
+- Confirm **One More Chapter** appears on the first page of the **Tools** tab in KOReader's default menu order.
 - Confirm the current chapter and time to the next boundary appear. If another boundary exists, confirm its title and estimate appear too.
 - Select each preset budget, then try a custom value such as 7 minutes.
 - Confirm the result names a stopping boundary and gives an estimate range, confidence label, and budget fit.
@@ -51,6 +54,7 @@ Try these checks with a few EPUBs before relying on estimates. Keep your current
 - With automatic pace selected (the default), open a budget and confirm the result uses KOReader pace and reports its confidence. If there is no usable data, the plugin should request manual pace. To check switching back, set a manual pace first, then choose **Use KOReader automatic pace**.
 - Change the safety buffer to 0%, then 50%. Compare the suggested boundary; a larger buffer should not make the plugin recommend a later boundary.
 - Restart KOReader. Confirm saved pace and buffer choices remain available.
+- With KOReader's top status line enabled, confirm the **Ch: ...** estimate appears and changes as you turn pages. Toggle it off and on from the plugin's budget screen.
 
 ### EPUB and layout edge cases
 
