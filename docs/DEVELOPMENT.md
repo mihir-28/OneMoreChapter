@@ -4,7 +4,7 @@
 
 Initial target is Kindle Basic 7th generation, touchscreen, 167-ppi monochrome display, firmware 5.12.2.2, KOReader `2026.07.1`, with Bookshelf installed. Verify the installed Bookshelf version before relying on optional integration. EPUB is the only supported format in the first release. PDF and DjVu are out of scope for v1.
 
-KOReader source is pinned at `v2026.07.1`, peeled commit `9192014d8bd82a91dc1012473be0f238dedfdb54`. Local source snapshots live under ignored `references/`. Do not edit the checkout or copy undocumented behavior from a different release without checking the pinned source.
+KOReader source is pinned at `v2026.07.1`, peeled commit `9192014d8bd82a91dc1012473be0f238dedfdb54`. Keep any local source checkout outside this repository so its Git history cannot appear in the plugin project's IDE or version history. Do not edit the checkout or copy undocumented behavior from a different release without checking the pinned source.
 
 ## Plugin contract
 
