@@ -100,9 +100,14 @@ function ChapterAdapter.read(reader_ui)
         return nil, "no_future_boundary"
     end
 
-    local current_title = cleanTitle(toc, call(toc, "getTocTitleByPage", current_position or current_page))
-    if not current_title and type(current_index) == "number" and type(toc_entries) == "table" then
+    -- Use same XPointer-selected entry as boundary selection. Page-title lookup
+    -- can pick an earlier front-matter heading sharing the rendered page.
+    local current_title
+    if type(current_index) == "number" and type(toc_entries) == "table" then
         current_title = cleanTitle(toc, toc_entries[current_index] and toc_entries[current_index].title)
+    end
+    if not current_title then
+        current_title = cleanTitle(toc, call(toc, "getTocTitleByPage", current_position or current_page))
     end
     return {
         current_page = current_page,
