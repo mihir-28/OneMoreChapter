@@ -15,16 +15,18 @@ KOReader 2026.07.1 source inspection confirmed these interfaces:
 - `ReaderUI:getCurrentPage()` supplies current rendered page.
 - `Document:getPageCount()`, `Document:getCurrentPos()`, and `Document:getToc()` are available through the active document adapter.
 - `ReaderToc:fillToc()`, `getTocIndexByPage()`, `getTocTitleByPage()`, and `getNextChapter()` expose the reader's normalized chapter navigation.
-- `ReaderStatistics:getTimeForPages(pages)` returns a formatted estimate when statistics are enabled and a valid average exists. `avg_time` is also present but is internal state; prefer the method and treat it as optional.
+- The Statistics module keeps a numeric `avg_time` and `book_read_pages` count for the active book. These are not a stable public API, so access stays inside `modules/stats_adapter.lua`, is feature-detected, and must be checked against the pinned release. Manual seconds-per-page pace covers missing or disabled statistics.
 
-The statistics plugin already estimates reading time from page pace. One More Chapter's product value is budget-based stopping recommendations with uncertainty, not a duplicate of KOReader's basic remaining-time estimate. Do not mutate `statistics.sqlite3` or change reading position.
+The statistics plugin already estimates reading time from page pace. One More Chapter's product value is budget-based stopping recommendations with uncertainty, not a duplicate of KOReader's basic remaining-time estimate. Do not mutate `statistics.sqlite3` or change reading position. Displayed ranges use heuristic bands around the expected value: ±20% for high confidence, ±35% for medium, and ±50% for low. These are planning ranges, not statistical confidence intervals. High confidence requires at least 50 current-book pages; medium requires 20–49; lower samples and manual pace are low confidence. The default recommendation reserves 10% of the budget; user can set buffer from 0–50%.
 
 ## Implementation gates
 
-1. **API diagnostic:** load plugin in reader, confirm menu entry on EPUB only, inspect page/TOC/statistics interfaces, and verify clear fallback when TOC or statistics are absent.
-2. **MVP:** select a reliable next chapter boundary, estimate remaining time with KOReader statistics where usable, and offer a manual pace fallback.
-3. **Budget recommendation:** compare current and upcoming chapter boundaries against preset/custom time budgets; show a range and confidence; never navigate without confirmation.
-4. **Device polish:** settings, button navigation, translations, error states, low-grayscale readability, and on-device performance.
+1. **API diagnostic:** source inspection confirmed menu, page, TOC, and statistics interfaces. Device load and fallback checks remain.
+2. **MVP:** implemented TOC boundary selection, book-end fallback, current-book pace estimates, manual pace, preset/custom budgets, heuristic estimate ranges, and buffered stop recommendations.
+3. **Device validation:** verify boundary choices, pace samples, UI fit, and Kindle behavior before release.
+4. **Accuracy and polish:** rolling 7/30-day pace, outlier filtering and smoothing, optional manual words-per-minute, nested/ambiguous TOC rejection, layout-change confidence, page-based fallback when TOC is absent, translations, and on-device performance remain unimplemented.
+
+The current confidence bands are heuristic labels based only on KOReader's current-book sample count. The displayed ±20/35/50% ranges are planning bands, not measured statistical intervals. No automated test suite or Kindle validation has been completed; the MVP is not release-ready.
 
 ## Device review checklist
 
