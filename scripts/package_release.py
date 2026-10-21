@@ -15,7 +15,7 @@ FILES = ("README.md", "CHANGELOG.md", "LICENSE")
 
 def read_version() -> str:
     metadata = (ROOT / PLUGIN_DIR / "_meta.lua").read_text(encoding="utf-8")
-    match = re.search(r'^\s*version = "([0-9]+\.[0-9]+\.[0-9]+)"$', metadata, re.M)
+    match = re.search(r'^\s*version = "([0-9]+\.[0-9]+\.[0-9]+)"\s*,?\s*$', metadata, re.M)
     if not match:
         raise SystemExit("Could not read plugin version from _meta.lua")
     return match.group(1)
